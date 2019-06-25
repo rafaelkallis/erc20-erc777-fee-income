@@ -4,9 +4,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ERC777FeeIncome.sol";
 
 /**
- * @title ERC777BurnFeeIncome
+ * @title ERC777BurnFee
  */
-contract ERC777BurnFeeIncome is ERC777FeeIncome {
+contract ERC777BurnFee is ERC777FeeIncome {
   using SafeMath for uint256;
 
   uint256 private _burnFeeInverse;

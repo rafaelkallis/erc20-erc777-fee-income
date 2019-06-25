@@ -4,9 +4,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./ERC20FeeIncome.sol";
 
 /**
- * @title ERC20TransferFeeIncome
+ * @title ERC20TransferFee
  */
-contract ERC20TransferFeeIncome is ERC20FeeIncome {
+contract ERC20TransferFee is ERC20FeeIncome {
   using SafeMath for uint256;
 
   uint256 private _transferFeeInverse;
