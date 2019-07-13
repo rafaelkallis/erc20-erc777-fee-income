@@ -18,6 +18,13 @@ contract ERC777SendFee is ERC777FeeIncome {
   }
 
   /**
+   * @dev Returns the inverse of the send-fee.
+   */
+  function sendFeeInverse() public view returns (uint256) {
+    return _sendFeeInverse;
+  }
+
+  /**
    * @dev Charges `account` a send-fee relative to `sendAmount`.
    *
    * @dev Usage example:
@@ -44,10 +51,6 @@ contract ERC777SendFee is ERC777FeeIncome {
    */
   function _chargeSendFee(address account, uint256 sendAmount) internal {
     _chargeFee(account, _sendFee(sendAmount));
-  }
-
-  function sendFeeInverse() public view returns (uint256) {
-    return _sendFeeInverse;
   }
 
   function _sendFee(uint256 amount) private view returns (uint256) {

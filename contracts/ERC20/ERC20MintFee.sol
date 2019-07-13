@@ -17,6 +17,9 @@ contract ERC20MintFee is ERC20FeeIncome {
   }
 
 
+  /**
+   * @dev Returns the inverse of the mint-fee.
+   */
   function mintFeeInverse() public view returns (uint256) {
     return _mintFeeInverse;
   }

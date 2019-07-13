@@ -17,6 +17,13 @@ contract ERC20BurnFee is ERC20FeeIncome {
   }
 
   /**
+   * @dev Returns the inverse of the burn-fee.
+   */
+  function burnFeeInverse() public view returns (uint256) {
+    return _burnFeeInverse;
+  }
+
+  /**
    * @dev Charges `account` a burn-fee relative to `burnAmount`.
    *
    * @dev Usage example:
@@ -37,10 +44,6 @@ contract ERC20BurnFee is ERC20FeeIncome {
    */
   function _chargeBurnFee(address account, uint256 burnAmount) internal {
     _chargeFee(account, _burnFee(burnAmount));
-  }
-
-  function burnFeeInverse() public view returns (uint256) {
-    return _burnFeeInverse;
   }
 
   function _burnFee(uint256 amount) private view returns (uint256) {

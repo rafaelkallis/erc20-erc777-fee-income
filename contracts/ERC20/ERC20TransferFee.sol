@@ -17,6 +17,13 @@ contract ERC20TransferFee is ERC20FeeIncome {
   }
 
   /**
+   * @dev Returns the inverse of the transfer-fee.
+   */
+  function transferFeeInverse() public view returns (uint256) {
+    return _transferFeeInverse;
+  }
+
+  /**
    * @dev Charges `account` a transfer-fee relative to `transferAmount`.
    *
    * @dev Usage example:
@@ -39,10 +46,6 @@ contract ERC20TransferFee is ERC20FeeIncome {
    */
   function _chargeTransferFee(address account, uint256 transferAmount) internal {
     _chargeFee(account, _transferFee(transferAmount));
-  }
-
-  function transferFeeInverse() public view returns (uint256) {
-    return _transferFeeInverse;
   }
 
   function _transferFee(uint256 amount) private view returns (uint256) {

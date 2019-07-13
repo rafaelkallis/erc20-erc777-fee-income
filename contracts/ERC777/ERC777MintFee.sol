@@ -17,6 +17,13 @@ contract ERC777MintFee is ERC777FeeIncome {
   }
 
   /**
+   * @dev Returns the inverse of the mint-fee.
+   */
+  function mintFeeInverse() public view returns (uint256) {
+    return _mintFeeInverse;
+  }
+
+  /**
    * @dev Charges `account` a mint-fee relative to `mintAmount`.
    *
    * @dev Usage example:
@@ -34,11 +41,7 @@ contract ERC777MintFee is ERC777FeeIncome {
     _chargeFee(account, _mintFee(mintAmount));
   }
 
-  function mintFeeInverse() public view returns (uint256) {
-    return _mintFeeInverse;
-  }
-
-  function _mintFee(uint256 amount) internal view returns (uint256) {
+  function _mintFee(uint256 amount) private view returns (uint256) {
     return amount.div(_mintFeeInverse);
   }
 }

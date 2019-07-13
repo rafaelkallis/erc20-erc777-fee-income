@@ -17,6 +17,13 @@ contract ERC777BurnFee is ERC777FeeIncome {
   }
 
   /**
+   * @dev Returns the inverse of the burn-fee.
+   */
+  function burnFeeInverse() public view returns (uint256) {
+    return _burnFeeInverse;
+  }
+
+  /**
    * @dev Charges `account` a burn-fee relative to `burnAmount`.
    *
    * @dev Usage example:
@@ -44,11 +51,7 @@ contract ERC777BurnFee is ERC777FeeIncome {
     _chargeFee(account, _burnFee(burnAmount));
   }
 
-  function burnFeeInverse() public view returns (uint256) {
-    return _burnFeeInverse;
-  }
-
-  function _burnFee(uint256 amount) internal view returns (uint256) {
+  function _burnFee(uint256 amount) private view returns (uint256) {
     return amount.div(_burnFeeInverse);
   }
 }
