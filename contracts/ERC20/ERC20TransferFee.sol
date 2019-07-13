@@ -17,46 +17,35 @@ contract ERC20TransferFee is ERC20FeeIncome {
   }
 
   /**
-   * @see IERC20#transfer()
+   * @dev Charges `account` a transfer-fee relative to `transferAmount`.
    *
-   * @dev Fee charge during transfer. The recipient is given the
-   * full amount specified. Additionaly, the sender is charged a fee.
-   */
-  function transfer(address to, uint256 amount) public returns (bool) {
-    if (!super.transfer(to, amount)) {
-      return false;
-    }
-    require(
-      super.transfer(address(this), _transferFee(amount)),
-      "ERC20TransferFeeIncome: unsuccessful charge."
-    );
-    _feeCharged(msg.sender, _transferFee(amount));
-    return true; 
-  }
-  
-  /**
-   * @see IERC20#transferFrom()
+   * @dev Usage example:
+   * ```
+   * function transfer(address to, uint256 amount) public returns (bool) {
+   *   require(super.transfer(to, amount));
+   *   _chargeTransferFee(msg.sender, amount);
+   *   return true;
+   * }
    *
-   * @dev Fee charge during transfer. The recipient is given the
-   * full amount specified. Additionaly, the sender is charged a fee.
+   * function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
+   *   require(super.transferFrom(sender, recipient, amount));
+   *   _chargeTransferFee(sender, amount);
+   *   return true;
+   * }
+   * ```
+   * 
+   * @param account The account to charge.
+   * @param transferAmount The amount to be transferred.
    */
-  function transferFrom(address from, address to, uint256 amount) public returns (bool) {
-    if (!super.transferFrom(from, to, amount)) {
-      return false;
-    }
-    require(
-      super.transferFrom(from, address(this), _transferFee(amount)),
-      "ERC20TransferFeeIncome: unsuccessful charge"
-    );
-    _feeCharged(from, _transferFee(amoun));
-    return true; 
+  function _chargeTransferFee(address account, uint256 transferAmount) internal {
+    _chargeFee(account, _transferFee(transferAmount));
   }
 
   function transferFeeInverse() public view returns (uint256) {
     return _transferFeeInverse;
   }
 
-  function _transferFee(uint256 amount) internal view returns (uint256) {
+  function _transferFee(uint256 amount) private view returns (uint256) {
     return amount.div(_transferFeeInverse);
   }
 }

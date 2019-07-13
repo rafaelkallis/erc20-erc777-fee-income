@@ -1,18 +1,18 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./ERC777FeeIncome.sol";
+import "./ERC20FeeIncome.sol";
 
 /**
- * @title ERC777BurnFee
+ * @title ERC20BurnFee
  */
-contract ERC777BurnFee is ERC777FeeIncome {
+contract ERC20BurnFee is ERC20FeeIncome {
   using SafeMath for uint256;
 
   uint256 private _burnFeeInverse;
 
   constructor(uint256 burnFeeInverse) public {
-    require(burnFeeInverse > 0, "ERC777BurnFeeIncome: burnFeeInverse is 0");
+    require(burnFeeInverse > 0, "ERC20BurnFee: burnFeeInverse is 0");
     _burnFeeInverse = burnFeeInverse;
   }
 
@@ -21,19 +21,14 @@ contract ERC777BurnFee is ERC777FeeIncome {
    *
    * @dev Usage example:
    * ```
-   * function burn(uint256 amount, bytes calldata data) public {
-   *   super.burn(amount, data);
+   * function burn(uint256 amount) public {
+   *   super.burn(amount);
    *   _chargeBurnFee(msg.sender, amount);
    * }
-   * 
-   * function operatorBurn(
-   *   address from, 
-   *   uint256 amount,
-   *   bytes memory data,
-   *   bytes memory operatorData
-   * ) public {
-   *   super.operatorBurn(from, amount, data, operatorData);
-   *   _chargeBurnFee(from, amount);
+   *
+   * function burnFrom(address account, uint256 amount) public {
+   *   super.burnFrom(account, amount);
+   *   _chargeBurnFee(account, amount);
    * }
    * ```
    * 
@@ -48,7 +43,7 @@ contract ERC777BurnFee is ERC777FeeIncome {
     return _burnFeeInverse;
   }
 
-  function _burnFee(uint256 amount) internal view returns (uint256) {
+  function _burnFee(uint256 amount) private view returns (uint256) {
     return amount.div(_burnFeeInverse);
   }
 }

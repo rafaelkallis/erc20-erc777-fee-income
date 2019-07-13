@@ -34,21 +34,27 @@ contract FeeIncome {
   }
   
   /**
-   * @dev Computes the amount of outstanding fees the message 
-   * sender is entitled to receive. The (internal) function
-   * caller is responsible for transfering the amount of 
-   * outstanding fees to the message sender. After calling this
-   * method, the message sender's outstanding fees are cleared.
+   * @dev Computes the amount of outstanding fees `account`
+   * is entitled to receive. The (internal) function caller 
+   * is responsible for transfering the amount of outstanding 
+   * fees to `account`. After calling this method, `account`'s 
+   * outstanding fees are cleared.
+   *
+   * @param account The account to compute and clear fees from.
+   * @return feeAmount to be transfered to `account`.
    */
-  function _computeAndClearFees() internal returns (uint256);
+  function _computeAndClearFees(address account) internal returns (uint256);
   
   /**
-   * @dev This method MUST be called when a charge occurs.
+   * @dev Register a charge.
+   *
+   * @param account The account to be charged a fee.
+   * @param feeAmount The amount to charge.
    */
-  function _feeCharged(address account, uint256 amount) internal {
-    _outstandingFees = _outstandingFees.add(amount);
-    _blockFees[block.number].push(amount);
-    emit FeeCharged(account, amount);
+  function _chargeFee(address account, uint256 feeAmount) internal {
+    _outstandingFees = _outstandingFees.add(feeAmount);
+    _blockFees[block.number].push(feeAmount);
+    emit FeeCharged(account, feeAmount);
   }
   
   /**

@@ -14,31 +14,43 @@ contract ERC777SendFee is ERC777FeeIncome {
   constructor(uint256 sendFeeInverse) public {
     require(sendFeeInverse > 0, "ERC777SendFeeIncome: sendFeeInverse is 0");
     _sendFeeInverse = sendFeeInverse;
+
   }
 
-  function send(address to, uint256 amount, bytes calldata data) external {
-    super.send(to, amount, data);
-    super.send(address(this), _sendFee(amount), "");
-    _feeCharged(msg.sender, _sendFee(amount));
-  }
-  
-  function operatorSend(
-    address from, 
-    address to, 
-    uint256 amount,
-    bytes calldata data,
-    bytes calldata operatorData
-  ) external {
-    super.operatorSend(from, to, amount, data, operatorData);
-    super.operatorSend(from, address(this), _sendFee(amount), "", "");
-    _feeCharged(sender, _sendFee(amount));
+  /**
+   * @dev Charges `account` a send-fee relative to `sendAmount`.
+   *
+   * @dev Usage example:
+   * ```
+   * function send(address recipient, uint256 amount, bytes calldata data) public {
+   *   super.send(recipient, amount, data);
+   *   _chargeSendFee(msg.sender, amount);
+   * }
+   *
+   * function operatorSend(
+   *   address sender,
+   *   address recipient,
+   *   uint256 amount,
+   *   bytes calldata data,
+   *   bytes calldata operatorData
+   * ) public {
+   *   super.operatorSend(sender, recipient, amount, data, operatorData);
+   *   _chargeSendFee(sender, amount);
+   * }
+   * ```
+   * 
+   * @param account The account to charge.
+   * @param sendAmount The amount to be sent.
+   */
+  function _chargeSendFee(address account, uint256 sendAmount) internal {
+    _chargeFee(account, _sendFee(sendAmount));
   }
 
   function sendFeeInverse() public view returns (uint256) {
     return _sendFeeInverse;
   }
 
-  function _sendFee(uint256 amount) internal view returns (uint256) {
+  function _sendFee(uint256 amount) private view returns (uint256) {
     return amount.div(_sendFeeInverse);
   }
 }

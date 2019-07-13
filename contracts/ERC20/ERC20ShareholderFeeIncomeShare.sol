@@ -1,41 +1,33 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/token/IERC20/IERC20.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../ShareholderFeeIncomeShare.sol";
 
 /**
  * @title ERC20ShareholderFeeIncomeShare
  */
-contract ERC20ShareholderFeeIncomeShare is ShareholderFeeIncomeShare, IERC20 {
+contract ERC20ShareholderFeeIncomeShare is IERC20, ShareholderFeeIncomeShare {
 
-  struct TemporalValue {
-    uint256 fromBlock;
-    uint256 toBlock;
-    uint256 value;
-  }
+  // function transfer(address to, uint256 amount) public returns (bool) {
+  //   _beforeTransferHook(msg.sender, to);
+  //   require(
+  //     super.transfer(to, amount),
+  //     "ERC20ShareholderFeeIncomeShare: super tranfer failed."
+  //   );
+  //   return true;
+  // }
 
-  mapping(address => TemporalValue[]) private _balances;
-  TemporalValue[] private _totalSupplies;
+  // function transferFrom(address from, address to, uint256 amount) public returns (bool) {
+  //   _beforeTransferHook(from, to);
+  //   require(
+  //     super.transferFrom(from, to, amount),
+  //     "ERC20ShareholderFeeIncomeShare: super tranferFrom failed."
+  //   );
+  //   return true;
+  // }
 
-  function transfer(address recipient, uint256 amount) public returns (bool) {
-    uint256 previousSenderBalance = balanceOf(msg.sender);
-    uint256 previousRecipientBalance = balanceOf(recipient);
-    if (!super.transfer(recipient, amount)) {
-      return false;
-    }
-    _updateBalance(msg.sender, previousSenderBalance);
-    _updateBalance(recipient, previousRecipientBalance);
-    return true;
-  }
-
-  function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
-    uint256 previousSenderBalance = balanceOf(sender);
-    uint256 previousRecipientBalance = balanceOf(recipient);
-    if (!super.transferFrom(sender, recipient, amount)) {
-      return false;
-    }
-    _updateBalance(sender, previousSenderBalance);
-    _updateBalance(recipient, previousRecipientBalance);
-    return true;
+  function _beforeTransfer(address sender, address recipient) internal {
+    _updateBalance(sender, this.balanceOf(sender));
+    _updateBalance(recipient, this.balanceOf(recipient));
   }
 }

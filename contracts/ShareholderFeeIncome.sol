@@ -44,7 +44,7 @@ contract ShareholderFeeIncome is FeeIncome {
     return _shares;
   }
 
-  function lastCollectionBlock(address account) public view returns (uint256 memory) {
+  function lastCollectionBlock(address account) public view returns (uint256) {
     return _lastCollectionBlock[account];
   }
 }

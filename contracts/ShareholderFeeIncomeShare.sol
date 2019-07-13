@@ -1,6 +1,5 @@
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 
 /**
@@ -24,11 +23,11 @@ contract ShareholderFeeIncomeShare {
       uint256[] memory balances,
       uint256[] memory totalSupplies
     ) {
-      uint256 i_bal = _balances[account].length - 1;
-      uint256 i_ts = _totalSupplies.length - 1;
-      uint256 minToBlock;
-      uint256 maxFromBlock;
-      for (uint256 i = 0; i_bal >= 0 && i_ts >= 0; i++) {
+      uint i_bal = _balances[account].length - 1;
+      uint i_ts = _totalSupplies.length - 1;
+      uint minToBlock;
+      uint maxFromBlock;
+      for (uint i = 0; i_bal >= 0 && i_ts >= 0; i++) {
         maxFromBlock = Math.max(
           _balances[account][i_bal].fromBlock,
           _totalSupplies[i_ts].fromBlock

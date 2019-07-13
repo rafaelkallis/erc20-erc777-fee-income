@@ -12,8 +12,8 @@ contract SingleOwnerFeeIncome is FeeIncome, Ownable {
     if (!isOwner()) {
       return 0;
     }
-    uint256 amount = _pendingFees;
-    _pendingFees = 0;
+    uint256 amount = _outstandingFees;
+    _outstandingFees = 0;
     return amount;
   }
 }
