@@ -5,6 +5,7 @@ import "../FeeIncome.sol";
 
 /**
  * @title ERC20FeeIncome
+ * @author Rafael Kallis <rk@rafaelkallis.com>
  */
 contract ERC20FeeIncome is IERC20, FeeIncome {
 

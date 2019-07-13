@@ -5,6 +5,7 @@ import "./ERC777FeeIncome.sol";
 
 /**
  * @title ERC777SendFee
+ * @author Rafael Kallis <rk@rafaelkallis.com>
  */
 contract ERC777SendFee is ERC777FeeIncome {
   using SafeMath for uint256;

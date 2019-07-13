@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /**
  * @title FeeIncome
+ * @author Rafael Kallis <rk@rafaelkallis.com>
  */
 contract FeeIncome {
   using SafeMath for uint256;

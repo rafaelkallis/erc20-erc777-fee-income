@@ -5,6 +5,7 @@ import "./ERC20FeeIncome.sol";
 
 /**
  * @title ERC20BurnFee
+ * @author Rafael Kallis <rk@rafaelkallis.com>
  */
 contract ERC20BurnFee is ERC20FeeIncome {
   using SafeMath for uint256;
