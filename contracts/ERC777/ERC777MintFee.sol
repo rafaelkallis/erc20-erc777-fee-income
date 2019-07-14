@@ -10,18 +10,24 @@ import "./ERC777FeeIncome.sol";
 contract ERC777MintFee is ERC777FeeIncome {
   using SafeMath for uint256;
 
-  uint256 private _mintFeeInverse;
+  uint256 private _mintFee;
 
-  constructor(uint256 mintFeeInverse) public {
-    require(mintFeeInverse > 0, "ERC777MintFeeIncome: mintFeeInverse is 0");
-    _mintFeeInverse = mintFeeInverse;
+  constructor(uint256 mintFee) public {
+    _mintFee = mintFee;
   }
 
   /**
-   * @dev Returns the inverse of the mint-fee.
+   * @dev Returns the mint fee.
    */
-  function mintFeeInverse() public view returns (uint256) {
-    return _mintFeeInverse;
+  function mintFee() public view returns (uint256) {
+    return _mintFee;
+  }
+
+  /**
+   * @dev Returns the mint fee relative to `mintAmount`.
+   */
+  function mintFee(uint256 mintAmount) public view returns (uint256) {
+    return mintAmount.mul(_mintFee).div(10 ** 18);
   }
 
   /**
@@ -39,10 +45,6 @@ contract ERC777MintFee is ERC777FeeIncome {
    * @param mintAmount The amount to be minted.
    */
   function _chargeMintFee(address account, uint256 mintAmount) internal {
-    _chargeFee(account, _mintFee(mintAmount));
-  }
-
-  function _mintFee(uint256 amount) private view returns (uint256) {
-    return amount.div(_mintFeeInverse);
+    _chargeFee(account, mintFee(mintAmount));
   }
 }

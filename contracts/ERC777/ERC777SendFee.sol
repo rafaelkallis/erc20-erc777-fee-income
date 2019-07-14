@@ -10,19 +10,24 @@ import "./ERC777FeeIncome.sol";
 contract ERC777SendFee is ERC777FeeIncome {
   using SafeMath for uint256;
 
-  uint256 private _sendFeeInverse;
+  uint256 private _sendFee;
 
-  constructor(uint256 sendFeeInverse) public {
-    require(sendFeeInverse > 0, "ERC777SendFeeIncome: sendFeeInverse is 0");
-    _sendFeeInverse = sendFeeInverse;
-
+  constructor(uint256 sendFee) public {
+    _sendFee = sendFee;
   }
 
   /**
-   * @dev Returns the inverse of the send-fee.
+   * @dev Returns the send fee.
    */
-  function sendFeeInverse() public view returns (uint256) {
-    return _sendFeeInverse;
+  function sendFee() public view returns (uint256) {
+    return _sendFee;
+  }
+
+  /**
+   * @dev Returns the send fee relative to `sendAmount`.
+   */
+  function sendFee(uint256 sendAmount) public view returns (uint256) {
+    return sendAmount.mul(_sendFee).div(10 ** 18);
   }
 
   /**
@@ -51,10 +56,6 @@ contract ERC777SendFee is ERC777FeeIncome {
    * @param sendAmount The amount to be sent.
    */
   function _chargeSendFee(address account, uint256 sendAmount) internal {
-    _chargeFee(account, _sendFee(sendAmount));
-  }
-
-  function _sendFee(uint256 amount) private view returns (uint256) {
-    return amount.div(_sendFeeInverse);
+    _chargeFee(account, sendFee(sendAmount));
   }
 }

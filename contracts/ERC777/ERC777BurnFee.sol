@@ -10,18 +10,24 @@ import "./ERC777FeeIncome.sol";
 contract ERC777BurnFee is ERC777FeeIncome {
   using SafeMath for uint256;
 
-  uint256 private _burnFeeInverse;
+  uint256 private _burnFee;
 
-  constructor(uint256 burnFeeInverse) public {
-    require(burnFeeInverse > 0, "ERC777BurnFeeIncome: burnFeeInverse is 0");
-    _burnFeeInverse = burnFeeInverse;
+  constructor(uint256 burnFee) public {
+    _burnFee = burnFee;
   }
 
   /**
-   * @dev Returns the inverse of the burn-fee.
+   * @dev Returns the burn fee.
    */
-  function burnFeeInverse() public view returns (uint256) {
-    return _burnFeeInverse;
+  function burnFee() public view returns (uint256) {
+    return _burnFee;
+  }
+
+  /**
+   * @dev Returns the burn fee relative to `burnAmount`.
+   */
+  function burnFee(uint256 burnAmount) public view returns (uint256) {
+    return burnAmount.mul(_burnFee).div(10 ** 18);
   }
 
   /**
@@ -49,10 +55,6 @@ contract ERC777BurnFee is ERC777FeeIncome {
    * @param burnAmount The amount to be burned.
    */
   function _chargeBurnFee(address account, uint256 burnAmount) internal {
-    _chargeFee(account, _burnFee(burnAmount));
-  }
-
-  function _burnFee(uint256 amount) private view returns (uint256) {
-    return amount.div(_burnFeeInverse);
+    _chargeFee(account, burnFee(burnAmount));
   }
 }

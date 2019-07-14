@@ -10,23 +10,29 @@ import "./ERC20FeeIncome.sol";
 contract ERC20MintFee is ERC20FeeIncome {
   using SafeMath for uint256;
 
-  uint256 private _mintFeeInverse;
+  uint256 private _mintFee;
 
-  constructor(uint256 mintFeeInverse) public {
-    require(mintFeeInverse > 0, "ERC20MintFee: mintFeeInverse is 0");
-    _mintFeeInverse = mintFeeInverse;
+  constructor(uint256 mintFee) public {
+    _mintFee = mintFee;
   }
 
 
   /**
-   * @dev Returns the inverse of the mint-fee.
+   * @dev Returns the mint fee.
    */
-  function mintFeeInverse() public view returns (uint256) {
-    return _mintFeeInverse;
+  function mintFee() public view returns (uint256) {
+    return _mintFee;
+  }
+  
+  /**
+   * @dev Returns the mint fee relative to a `mintAmount`.
+   */
+  function mintFee(uint256 mintAmount) public view returns (uint256) {
+    return mintAmount.mul(_mintFee).div(10 ** 18);
   }
 
   /**
-   * @dev Charges `account` a mint-fee relative to `mintAmount`.
+   * @dev Charges `account` a mint fee relative to `mintAmount`.
    *
    * @dev Usage example:
    * ```
@@ -40,8 +46,8 @@ contract ERC20MintFee is ERC20FeeIncome {
    * @param account The account to charge.
    * @param mintAmount The amount to be minted.
    */
-  function _chargeMintFee(address account, uint256 mintAmount) internal {
-    _chargeFee(account, _mintFee(mintAmount));
+  function _chargeMint(address account, uint256 mintAmount) internal {
+    _chargeFee(account, mintAmount.mul(10 ** 18).div(_mintFee));
   }
 
   function _mintFee(uint256 amount) private view returns (uint256) {

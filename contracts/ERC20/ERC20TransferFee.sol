@@ -10,18 +10,24 @@ import "./ERC20FeeIncome.sol";
 contract ERC20TransferFee is ERC20FeeIncome {
   using SafeMath for uint256;
 
-  uint256 private _transferFeeInverse;
+  uint256 private _transferFee;
 
-  constructor(uint256 transferFeeInverse) public {
-    require(transferFeeInverse > 0, "ERC20TransferFee: transferFeeInverse is 0");
-    _transferFeeInverse = transferFeeInverse;
+  constructor(uint256 transferFee) public {
+    _transferFee = transferFee;
   }
 
   /**
-   * @dev Returns the inverse of the transfer-fee.
+   * @dev Returns the transfer fee.
    */
-  function transferFeeInverse() public view returns (uint256) {
-    return _transferFeeInverse;
+  function transferFee() public view returns (uint256) {
+    return _transferFee;
+  }
+
+  /**
+   * @dev Returns the transfer fee relative to `transferAmount`.
+   */
+  function transferFee(uint256 transferAmount) public view returns (uint256) {
+    return transferAmount.mul(_transferFee).div(10 ** 18);
   }
 
   /**
@@ -46,10 +52,6 @@ contract ERC20TransferFee is ERC20FeeIncome {
    * @param transferAmount The amount to be transferred.
    */
   function _chargeTransferFee(address account, uint256 transferAmount) internal {
-    _chargeFee(account, _transferFee(transferAmount));
-  }
-
-  function _transferFee(uint256 amount) private view returns (uint256) {
-    return amount.div(_transferFeeInverse);
+    _chargeFee(account, transferFee(transferAmount));
   }
 }
