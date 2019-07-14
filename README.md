@@ -1,6 +1,4 @@
-# erc20-erc777-fee-income
-
-### ERC20FeeIncome, ERC777FeeIncome
+## ERC20FeeIncome, ERC777FeeIncome
 
 #### A reusable token standard for creating tokenized, fee-based, revenue streams.
 
