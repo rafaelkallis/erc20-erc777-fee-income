@@ -65,3 +65,25 @@ contract MyToken is ERC20, ERC20Burnable, ERC20BurnFee(0.01 * 10e18) { // 1% bur
   }
 }
 ```
+
+### 4. Add send fee to `ERC777` token:
+```js
+contract MyToken is ERC777, ERC777SendFee(0.005) { // 0.5% send fee
+
+  function send(address recipient, uint256 amount, bytes calldata data) public {
+    super.send(recipient, amount, data);
+    _chargeSendFee(msg.sender, amount);
+  }
+  
+  function operatorSend(
+    address sender,
+    address recipient,
+    uint256 amount,
+    bytes calldata data,
+    bytes calldata operatorData
+  ) public {
+    super.operatorSend(sender, recipient, amount, data, operatorData);
+    _chargeSendFee(sender, amount);
+  }
+}
+```

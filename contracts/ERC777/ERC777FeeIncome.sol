@@ -2,6 +2,7 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC777/IERC777.sol";
 import "openzeppelin-solidity/contracts/token/ERC777/IERC777Recipient.sol";
+import "openzeppelin-solidity/contracts/introspection/IERC1820Registry.sol";
 import "../FeeIncome.sol";
 
 /**
@@ -9,6 +10,16 @@ import "../FeeIncome.sol";
  * @author Rafael Kallis <rk@rafaelkallis.com>
  */
 contract ERC777FeeIncome is IERC777, IERC777Recipient, FeeIncome {
+
+  IERC1820Registry constant private _erc1820 = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+
+  constructor() public {
+    _erc1820.setInterfaceImplementer(
+      address(this),
+      keccak256("ERC777TokensRecipient"),
+      address(this)
+    );
+  }
 
   /**
    * @dev Collect outstanding fees.
@@ -47,5 +58,19 @@ contract ERC777FeeIncome is IERC777, IERC777Recipient, FeeIncome {
     );
     this.operatorSend(account, address(this), feeAmount, data, operatorData);
     super._chargeFee(account, feeAmount);
+  }
+    
+  function tokensReceived(
+    address operator,
+    address from,
+    address to,
+    uint amount,
+    bytes calldata userData,
+    bytes calldata operatorData
+  ) external {
+    require(
+      msg.sender == address(this),
+      "ERC777FeeIncome: only this contract can be the message sender" 
+    );
   }
 }
