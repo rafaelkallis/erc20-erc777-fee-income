@@ -1,13 +1,14 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC777/IERC777.sol";
+import "openzeppelin-solidity/contracts/token/ERC777/IERC777Recipient.sol";
 import "../FeeIncome.sol";
 
 /**
  * @title ERC777FeeIncome
  * @author Rafael Kallis <rk@rafaelkallis.com>
  */
-contract ERC777FeeIncome is IERC777, FeeIncome {
+contract ERC777FeeIncome is IERC777, IERC777Recipient, FeeIncome {
 
   /**
    * @dev Collect outstanding fees.

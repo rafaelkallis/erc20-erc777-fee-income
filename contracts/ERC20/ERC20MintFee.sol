@@ -47,10 +47,6 @@ contract ERC20MintFee is ERC20FeeIncome {
    * @param mintAmount The amount to be minted.
    */
   function _chargeMint(address account, uint256 mintAmount) internal {
-    _chargeFee(account, mintAmount.mul(10 ** 18).div(_mintFee));
-  }
-
-  function _mintFee(uint256 amount) private view returns (uint256) {
-    return amount.div(_mintFeeInverse);
+    _chargeFee(account, mintFee(mintAmount));
   }
 }

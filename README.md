@@ -1,4 +1,4 @@
-## ERC20FeeIncome, ERC777FeeIncome
+# ERC20FeeIncome, ERC777FeeIncome
 
 #### A reusable token standard for creating tokenized, fee-based, revenue streams.
 
@@ -15,3 +15,53 @@ The project provides support for the following stories:
 - custom fee charge logic
 - payout collected fees to single owner;
 - payout collected fees to shareholders, where shares are in form of a `ERC20` or `ERC777` token. Feature supports dynamic shareholder balances and a dynamic circulating supply.
+
+The implementation relies on the `ERC20` approval, and `ERC777` operator mechanism.
+
+## Usage Guide
+
+### 1. Add transfer fee to `ERC20` token:
+```js
+contract MyToken is ERC20, ERC20TransferFee(0.05 * 10e18) { // 5% transfer fee
+
+  function transfer(address to, uint256 amount) public returns (bool) {
+    require(super.transfer(to, amount));
+    _chargeTransferFee(msg.sender, amount);
+    return true;
+  }
+  
+  function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
+    require(super.transferFrom(sender, recipient, amount));
+    _chargeTransferFee(sender, amount);
+    return true;
+  }
+}
+```
+
+### 2. Add mint fee to `ERC20` token:
+```js
+contract MyToken is ERC20, ERC20Mintable, ERC20MintFee(0.001 * 10e18) { // 0.1% mint fee
+
+  function mint(address account, uint256 amount) public returns (bool) {
+    require(super.mint(account, amount));
+    _chargeMintFee(msg.sender, amount);
+    return true;
+  }
+}
+```
+
+### 3. Add burn fee to `ERC20` token:
+```js
+contract MyToken is ERC20, ERC20Burnable, ERC20BurnFee(0.01 * 10e18) { // 1% burn fee
+
+  function burn(uint256 amount) public {
+    super.burn(amount);
+    _chargeBurnFee(msg.sender, amount);
+  }
+  
+  function burnFrom(address account, uint256 amount) public {
+    super.burnFrom(account, amount);
+    _chargeBurnFee(account, amount);
+  }
+}
+```
