@@ -68,7 +68,7 @@ contract MyToken is ERC20, ERC20Burnable, ERC20BurnFee(0.01 * 10e18) { // 1% bur
 
 ### 4. Add send fee to `ERC777` token:
 ```js
-contract MyToken is ERC777, ERC777SendFee(0.005) { // 0.5% send fee
+contract MyToken is ERC777, ERC777SendFee(0.005 ** 10e18) { // 0.5% send fee
 
   function send(address recipient, uint256 amount, bytes calldata data) public {
     super.send(recipient, amount, data);
@@ -84,6 +84,38 @@ contract MyToken is ERC777, ERC777SendFee(0.005) { // 0.5% send fee
   ) public {
     super.operatorSend(sender, recipient, amount, data, operatorData);
     _chargeSendFee(sender, amount);
+  }
+}
+```
+
+### 5. Add mint fee to `ERC777` token:
+```js
+contract MyToken is ERC777, ERC777Mintable, ERC777MintFee(0.025 ** 10e18) { // 2.5% mint fee
+
+  function mint(address recipient, uint256 amount) public {
+    super.mint(recipient, amount);
+    _chargeMintFee(msg.sender, amount);
+  }
+}
+```
+
+### 6. Add burn fee to `ERC777` token:
+```js
+contract MyToken is ERC777, ERC777BurnFee(0.01 ** 10e18) { // 1% burn fee
+
+  function burn(uint256 amount, bytes calldata data) public {
+    super.burn(amount, data);
+    _chargeBurnFee(msg.sender, amount);
+  }
+
+  function operatorBurn(
+    address account,
+    uint256 amount,
+    bytes calldata data,
+    bytes calldata operatorData
+  ) external {
+    super.operatorBurn(account, amount, data, operatorData);
+    _chargeBurnFee(account, amount);
   }
 }
 ```
