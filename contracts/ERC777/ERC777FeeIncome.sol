@@ -11,7 +11,7 @@ import "../FeeIncome.sol";
  */
 contract ERC777FeeIncome is IERC777, IERC777Recipient, FeeIncome {
 
-  IERC1820Registry constant private _erc1820 = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+  IERC1820Registry private _erc1820 = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
 
   constructor() public {
     _erc1820.setInterfaceImplementer(
@@ -27,7 +27,7 @@ contract ERC777FeeIncome is IERC777, IERC777Recipient, FeeIncome {
    * @dev See `FeeIncome.collectFees`.
    */
   function collectFees() external {
-    uint256 amount = _computeAndClearFees(msg.sender);
+    uint256 amount = _computeAndClearFees();
     this.send(msg.sender, amount, "");
     emit FeeCollected(msg.sender, amount);
   }
@@ -62,15 +62,15 @@ contract ERC777FeeIncome is IERC777, IERC777Recipient, FeeIncome {
     
   function tokensReceived(
     address operator,
-    address from,
-    address to,
-    uint amount,
-    bytes calldata userData,
-    bytes calldata operatorData
+    address,
+    address,
+    uint,
+    bytes calldata,
+    bytes calldata
   ) external {
     require(
-      msg.sender == address(this),
-      "ERC777FeeIncome: only this contract can be the message sender" 
+      operator == address(this),
+      "ERC777FeeIncome: tokens can be received by this contract only if this contract is the operator." 
     );
   }
 }

@@ -8,10 +8,7 @@ import "./FeeIncome.sol";
  */
 contract SingleOwnerFeeIncome is FeeIncome, Ownable {
 
-  function _computeAndClearFees() internal returns (uint256) {
-    if (!isOwner()) {
-      return 0;
-    }
+  function _computeAndClearFees() internal onlyOwner returns (uint256) {
     uint256 amount = _outstandingFees;
     _outstandingFees = 0;
     return amount;

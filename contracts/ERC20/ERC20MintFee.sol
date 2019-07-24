@@ -46,7 +46,7 @@ contract ERC20MintFee is ERC20FeeIncome {
    * @param account The account to charge.
    * @param mintAmount The amount to be minted.
    */
-  function _chargeMint(address account, uint256 mintAmount) internal {
+  function _chargeMintFee(address account, uint256 mintAmount) internal {
     _chargeFee(account, mintFee(mintAmount));
   }
 }

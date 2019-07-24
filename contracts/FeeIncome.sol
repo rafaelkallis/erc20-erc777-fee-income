@@ -41,10 +41,9 @@ contract FeeIncome {
    * fees to `account`. After calling this method, `account`'s 
    * outstanding fees are cleared.
    *
-   * @param account The account to compute and clear fees from.
-   * @return feeAmount to be transfered to `account`.
+   * @return feeAmount to be transfered to `msg.sender`.
    */
-  function _computeAndClearFees(address account) internal returns (uint256);
+  function _computeAndClearFees() internal returns (uint256);
   
   /**
    * @dev Register a charge.
